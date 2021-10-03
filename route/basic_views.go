@@ -6,9 +6,10 @@ import (
   )
   
 func landing_view(ctx *fiber.Ctx) error{
-  return ctx.Render("index", fiber.Map{
+  /*return ctx.Render("index", fiber.Map{
         //"student_name": "Steve",
-    })
+    })*/
+  return ctx.Redirect("/rooms")
 }
 
 func home_view(ctx *fiber.Ctx) error {
