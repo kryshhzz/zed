@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+  
+  <style type="text/css" media="all">
+    #rooms_holder {
+      display : grid;
+      grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+      grid-gap: .5rem;
+    }
+    .room_cont {
+      background : var(--blue);
+      color : var(--t2);
+    }
+    ul {
+      color : red;
+    }
+  </style>
+  <div class="rooms_bowl">
+    
+    <div id="rooms_holder">
+      {% for r in rooms %}
+        <div class="room_cont" onclick='window.location = "/rooms/{{ r.ID }}"'>
+          <h1>{{ r.ID }} {{ r.Title }} {{ r.Msgs|length }} {{ r.Members|length }} </h1>
+          
+          {% if r.Private == true %}
+            <i class="bx bxs-lock"></i>
+          {% endif %}
+          
+          <b>{{ r.Admin.Username }}</b>
+          
+        </div>
+      {% endfor %}
+    </div>
+    
+  </div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <style type="text/css" media="all">
+    
+  </style>
+  <div id="new-room-bowl">
+    
+    <form onsubmit="JsonAddNewRoom(); return false" accept-charset="utf-8">
+      <input type="text" name="title" id="title-input" value="" required placeholder="Title"/>
+      <input type="password" name="seckey" id="seckey-input" value="" required placeholder="Secret Key"/>
+      <input type="checkbox" id="privateInput" value="" />
+      <input type="submit" id="submitbtn" value="Create Room" />      
+    </form>
+    
+  </div>
+
+
+  <script type="text/javascript" charset="utf-8">
+  
+    function JsonAddNewRoom(){
+      
+      loaderOn()
+      
+      var title = document.getElementById("title-input").value
+      var seckey = document.getElementById("seckey-input").value
+      
+      var isPrivate = "no"
+      
+      if (document.getElementById("privateInput").checked){
+        isPrivate = "yes"
+      }
+      
+      var obj = new Object();
+      obj.title = title;
+      obj.seckey  = seckey;
+      obj.private = isPrivate;
+      
+      fetch ("/rooms/new",{
+        body : JSON.stringify(obj),
+        method : "POST",
+        headers: {"Content-type": "application/json; charset=UTF-8"}
+      })
+        
+        .then((res) => res.json())
+        .then((data) => {
+         
+          loaderOff()
+         
+          if (data["roomCreated"] == true){
+            window.location = "/rooms"
+          }else{
+            alert(data["error"])
+          }
+          
+        })
+    }
+    
+  </script>
+  
+{% endblock %}

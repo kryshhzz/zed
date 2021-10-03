@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+  
+  <style type="text/css" media="all">
+    
+  </style>
+  <div id="login_bowl">
+    <form action="/login/" onsubmit="JsonLoginPost(); return false">
+      <input type="text" name="username" id="username-input" value="random_user_one" placeholder="Username" required/>
+      <input type="password" name="password" id="password-input" value="password" placeholder="Password"/>
+      <input type="submit" id="submit-btn" value="Login" />
+    </form>
+  </div>
+  
+  <script type="text/javascript" charset="utf-8">
+  
+    function JsonLoginPost(){
+      
+      loaderOn()
+      
+      var username = document.getElementById("username-input").value
+      var password = document.getElementById("password-input").value
+      
+      var obj = new Object();
+      obj.username = username;
+      obj.password  = password;
+      
+      fetch ("/login",{
+        body : JSON.stringify(obj),
+        method : "POST",
+        headers: {"Content-type": "application/json; charset=UTF-8"}
+      })
+        
+        .then((res) => res.json())
+        .then((data) => {
+         
+          loaderOff()
+         
+          if (data["loggedIn"] == true){
+            window.location = "/home"
+          }else{
+            alert(data["error"])
+          }
+          
+        })
+      
+      
+    }
+  </script>
+  
+
+{% endblock %}

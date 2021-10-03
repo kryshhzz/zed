@@ -1,0 +1,153 @@
+<script type="text/javascript" charset="utf-8">
+
+  var typing = false
+
+  let msginput = document.getElementById("msg-input")
+  
+  let typingstatus = document.getElementById("typing-status")
+  
+  let socket = new WebSocket("wss://"+window.location.host+"/ws/{{ roomId }}");
+  
+  socket.onopen = function(e) {
+    alert("[open] Connection established");
+  };
+  
+  socket.onmessage = function(event) {
+    //alert(`[message] Data received from server: ${event.data}`);
+    appendMsg(`${event.data}`)
+  };
+  
+  socket.onclose = function(event) {
+    if (event.wasClean) {
+      alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+    } else {
+      alert('[close] Connection died');
+    }
+  };
+  
+  socket.onerror = function(error) {
+    alert(`[error] ${error.message}`);
+  };
+  
+  
+  function SendMsg(){
+    
+    // focusing the element even after clicking the button
+    document.getElementById("msg-input").focus()
+    
+    var replyID = document.getElementById("replyID").innerHTML
+    if (replyID.trim() == ""){
+      replyID = 0;
+    }
+
+    //scrolling to the bottom 
+    var objDiv = document.getElementById("msgs-bowl");
+    objDiv.scrollTop = objDiv.scrollHeight;
+
+    
+    if (msginput.value.trim() != ""){
+      socket.send(JSON.stringify({
+            message: msginput.value.trim(),
+            replyID : replyID,
+          }));
+      document.getElementById("msg-input").value = ""
+      typing = false;
+      socket.send(JSON.stringify({
+            typing: false,
+          }))
+    }
+    
+    closeReply()
+  }
+  
+    
+  function htmlise(actmsg,actID,curtime,repTo,repMsg,SenderID,SenderUsr){
+     if (SenderID == {{ usr.ID }} ) {
+       
+       if (repTo == "" && repMsg == ""){
+         var dupstr = `<div class="msg-cont">
+                <div class="msg out" ondblclick='Replier(`+actID+`,"`+actmsg+`","`+SenderUsr+`")'>
+                  <p class="actmsg">`+actmsg+`</p>
+                </div>
+              </div>`
+       }else{
+         var dupstr = `<div class="msg-cont">
+                <div class="msg out" ondblclick='Replier(`+actID+`,"`+actmsg+`","`+SenderUsr+`")'>
+                  <div class="rep">
+                    <p>`+repTo+` : `+repMsg+`</p>
+                  </div>
+                  <p class="actmsg">`+actmsg+`</p>
+                </div>
+              </div>`
+       }
+     
+     }else{
+       
+       if (repTo == "" && repMsg == ""){
+         var dupstr = `<div class="msg-cont">
+                <div class="msg in" ondblclick='Replier(`+actID+`,"`+actmsg+`","`+SenderUsr+`")'>
+                  <p class="actmsg">`+actmsg+`</p>
+                </div>
+              </div>`
+       }else{
+         var dupstr = `<div class="msg-cont">
+                <div class="msg in" ondblclick='Replier(`+actID+`,"`+actmsg+`","`+SenderUsr+`")'>
+                  <div class="rep">
+                    <p>`+repTo+` : `+repMsg+`</p>
+                  </div>
+                  <p class="actmsg">`+actmsg+`</p>
+                </div>
+              </div>`
+       }
+     }
+       
+    return dupstr
+  }
+  
+  function appendMsg(msg){
+    
+    var json_data = JSON.parse(msg)
+
+    
+    if(json_data.hasOwnProperty('message')){
+      navigator.vibrate("75")
+      var newmsg = htmlise(json_data["message"],json_data["actID"],json_data["time"],json_data["ReplyTo"],json_data["ReplyText"],json_data["SenderID"],json_data["SenderUsername"])
+      
+      document.getElementById("convo").innerHTML += newmsg
+      
+      
+    }else{
+      if (json_data["typing"] == true){
+        navigator.vibrate("25") 
+        typingstatus.style.visibility = "visible"
+      }else{
+        typingstatus.style.visibility = "hidden"
+      }
+     
+    }
+    
+  }
+  
+  
+  msginput.addEventListener("keyup", function (){
+    
+    if ( msginput.value != "" ) {
+      if (typing != true){
+        typing = true;
+        socket.send(JSON.stringify({
+            typing: true,
+          }))
+      }
+    }else{
+      if (typing == true){
+        typing = false;
+        socket.send(JSON.stringify({
+            typing: false,
+          }))
+      }
+    }
+    
+  })
+
+  
+</script>

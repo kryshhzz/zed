@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content= "width=device-width, user-scalable=no">
+
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    
+    <title></title>
+    
+    <style type="text/css" media="all">
+       @import url('http://fonts.cdnfonts.com/css/josefin-sans');
+       
+       :root {
+         --t1 : rgba(0,0,0,87%);
+         --t2 : rgba(0,0,0,77%);
+         --t3 : rgba(0,0,0,67%);
+         
+         --w1 : #ffffff;
+         --w2 : #fafafa;
+         --w3 : #f0f0f0;
+         --w4 : #eaeaea;
+         --w5 : #e0e0e0;
+         
+         --base : #ff7347;
+         
+         --blue : #0088ff;
+       }
+      /*h1 {
+          font-size: calc(2.25rem + (((100vw - 20rem) / (90 - 20))) * (4.75 - 2.25));
+        }*/
+      * {
+        box-sizing: border-box;
+        margin : 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      img {
+        width : 100%;
+      }
+      a {
+        text-decoration: none;
+      }
+      body {
+        background : var(--w2);
+        font-family: "Josefin Sans",Sans-Serif;
+      }
+      .gap {
+        height : 4rem;
+      }
+    </style>
+    
+  </head>
+  <body>
+    
+    {% include "loader.html" %}
+    
+    <div id="wrap">
+      {% block content %}
+      {% endblock %}
+    </div>
+    
+    <script type="text/javascript" charset="utf-8">
+    
+      const entryHeight = document.getElementById('entry').clientHeight;
+      
+      msgBowlHeight = window.innerHeight - entryHeight;
+      msgBowlHeightPx = msgBowlHeight+"px"
+      
+      document.getElementById("msgs-bowl").style.height = msgBowlHeightPx;
+      
+    </script>
+    
+  </body>
+</html>

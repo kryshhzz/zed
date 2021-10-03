@@ -1,0 +1,34 @@
+<script type="text/javascript" charset="utf-8">
+  
+  var replyBox = document.getElementById("replyBox")
+  var replyTo = document.getElementById("replyTo")
+  var replyMsg = document.getElementById("replyMsg")
+  var replyID = document.getElementById("replyID")
+  
+  
+  function Replier(objId,objText,objUsrname){
+    
+    navigator.vibrate(75)
+    
+    replyTo.innerHTML = objUsrname
+    replyMsg.innerHTML = objText
+    replyID.innerHTML = objId
+    
+    replyBox.style.display = "grid"
+    
+    
+    window.setTimeout(function () { 
+      document.getElementById("msg-input").focus()
+    }, 0); 
+    
+  }
+  
+  function closeReply(){
+    replyTo.innerHTML = ""
+    replyMsg.innerHTML = ""
+    replyID.innerHTML = "0"
+    replyBox.style.display = "none"
+  }
+  
+  
+</script>

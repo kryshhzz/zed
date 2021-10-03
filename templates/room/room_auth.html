@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <style type="text/css" media="all">
+    
+  </style>
+  <div class="room_auth_bowl">
+    <form onsubmit="AuthtoRoom(); return false" accept-charset="utf-8">
+      <input type="password" name="seckey" id="seckey-input" value="" required placeholder="Secret Key"/>
+      <input type="submit" name="submitbtn" id="submitbtn" value="Join" />
+    </form>
+  </div>
+  
+  <script type="text/javascript" charset="utf-8">
+    
+    var seckey = document.getElementById("seckey-input")
+    
+    function AuthtoRoom(){
+      
+      var obj = new Object()
+      obj.seckey = seckey.value;
+      
+      fetch ("/rooms/auth/{{ roomId }}",{
+        body : JSON.stringify(obj),
+        method : "POST",
+        headers: {"Content-type": "application/json; charset=UTF-8"}
+      })
+        
+        .then((res) => res.json())
+        .then((data) => {
+         
+          loaderOff()
+         
+          if (data["joinedRoom"] == true){
+            window.location = "/rooms/{{ id }}"
+          }else{
+            alert(data["error"])
+          }
+          
+        })
+    }
+    
+  </script>
+
+{% endblock %}

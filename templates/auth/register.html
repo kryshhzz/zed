@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+  
+  <style type="text/css" media="all">
+    
+  </style>
+  <div class="register_bowl">
+    <form accept-charset="utf-8" onsubmit="JsonPostRegsiterForm(); return false">
+      <input type="email" name="email" id="email-input" value="a@gamil.com" required placeholder="Email" />
+      <input type="text" name="username" id="username-input" value="random_user_one" required placeholder="Username" />
+      <input type="password" name="password" id="password-input" value="password" required placeholder="Password" />
+      <input type="submit" id="submitbtn" value="Signup" />
+    </form>
+  </div>
+  
+  <script type="text/javascript" charset="utf-8">
+  
+    function JsonPostRegsiterForm(){
+      
+      loaderOn()
+      
+      var username = document.getElementById("username-input").value
+      var password = document.getElementById("password-input").value
+      var email = document.getElementById("email-input").value
+      
+      var obj = new Object();
+      obj.username = username;
+      obj.password  = password;
+      obj.email = email
+      
+      fetch ("/register",{
+        body : JSON.stringify(obj),
+        method : "POST",
+        headers: {"Content-type": "application/json; charset=UTF-8"}
+      })
+        
+        .then((res) => res.json())
+        .then((data) => {
+         
+          loaderOff()
+         
+          if (data["userCreated"] == true){
+            window.location = "/login"
+          }else{
+            alert(data["error"])
+          }
+          
+        })
+      
+      
+    }
+  </script>
+  
+
+{% endblock %}

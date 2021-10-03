@@ -1,0 +1,43 @@
+<style type="text/css" media="all">
+  #loader {
+    position: fixed;
+    z-index: 99;
+    top : 0;
+    left : 0;
+    width : 100%;
+    height : 100%;
+    /*display: flex;*/
+    display : none;
+    justify-content: center;
+    align-items : center;
+    background : rgba(255,255,255,85%);
+  }
+  #loadermsg {
+    background : var(--blue);
+    padding : 1em 1.5em;
+    border-radius : .15em 1em 1em .75em;
+    font-size: 1.5rem;
+    color : var(--t1);
+    animation-duration: 1.25s;
+  }
+</style>
+<div id="loader">
+  <div id="loadermsg">
+    <i class="bx bxs-circle bx-flashing"></i>
+    <i class="bx bxs-circle bx-flashing"></i>
+    <i class="bx bxs-circle bx-flashing"></i>
+  </div>
+</div>
+<script type="text/javascript" charset="utf-8">
+  
+  var loader = document.getElementById("loader")
+  
+  function loaderOn(){
+    loader.style.display = "flex"
+  }
+  
+  function loaderOff(){
+    loader.style.display = "none"
+  }
+  
+</script>

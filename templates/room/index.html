@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <style type="text/css" media="all">
+    #whole {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    #left-side {
+      background : black;
+      display: none;
+    }
+    
+    #bowl {
+      padding : 1rem;
+      
+      display: flex;
+      justify-content : center;
+      align-items: flex-end;
+      background : var(--w2);
+    }
+    
+    #msgs-bowl {
+      width : 100%;
+      overflow-y: scroll;
+    }
+    
+    .msg-cont {
+      width : 100%;
+      display : grid;
+      grid-template-columns: 1fr ;
+    }
+    .msg {
+      margin : .1rem 0;
+      padding : .5rem .75rem;
+      text-align: left;
+      max-width: 60%;
+      word-break: break-word;
+      line-height: 1.3rem;
+    }
+    .in {
+      background : var(--blue);
+      color : var(--w2);
+      justify-self: start;
+      border-radius : .15rem 1rem 1rem .75rem;
+    }
+    .out {
+      background : var(--w4);
+      justify-self: end;
+      border-radius : 1rem .75rem .15rem 1rem;
+      color : var(--t2);
+    }
+    .rep {
+      border-left : .2rem solid rgb(255,255,255,50%);
+      padding : 0 .5rem;
+      margin : .5rem .25rem;
+      font-size: .8em;
+      opacity: 80%;
+    }
+
+    #entryBowl {
+      position : fixed;
+      bottom : 0;
+      right : 0;
+      width : 100%;
+      background : var(--w2);
+      border-radius: 1.5rem 1.5rem 0 0 ;
+      border : .08rem solid rgba(0,0,0,25%);
+      border-bottom-width:0 ;
+    }
+    
+    #entry {
+      width : 100%;   
+      display: flex;
+      justify-content: center;
+      align-items : center;
+      padding : .9rem .75rem;
+      background : var(--w2);
+      border-radius : inherit;
+    }
+    #entry * {
+      font-size: 1rem;
+    }
+    #entry input {
+      flex-basis: 85%;
+      width : 100%;
+      background : none;
+      border : none;
+      outline : none;
+      padding : 0 .5rem;
+      font-family: inherit;
+    }
+    #entry button {
+      flex-basis: 15%;
+      width : 100%;
+      border : none;
+      outline : none;
+      background : none;
+      color : var(--blue);
+    }
+    #entry button i {
+      font-size: 1.5rem;
+    }
+    
+    #replyBox {
+      background : inherit;
+      padding : .75rem 1rem;
+      border-radius: inherit;
+      color : var(--t3);
+      border-bottom: .08rem solid rgba(0,0,0,17.5%);
+      
+      display: none;
+      grid-template-columns: 90% 10%;
+      align-items: center;
+      
+    }
+    #replyBox p {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    #replyBox i {
+      font-size: 1.4rem;
+    }
+    #replyID {
+      display: none !important;
+    }
+    
+    @media (min-width : 768px){
+      #left-side {
+        display: block;
+      }
+      #whole {
+        grid-template-columns: 25% 75%;
+      }
+      #entryBowl {
+        width : 75%;
+      }
+    }
+    
+    #typing-status {
+      visibility : hidden;
+    }
+    #typing-status .msg i{
+      font-size: .65em !important;
+      color : var(--w5) !important;
+      animation-duration: 1.25s;
+    }
+    
+    .mini-p {
+      font-size: .6rem;
+      color : var(--w4);
+    }
+    
+  </style>
+  <div id="whole">
+    
+    <div id="left-side">ohh</div>
+    
+    <div id="bowl">
+      
+      <div id="msgs-bowl">
+        
+        <div id="convo">
+          <!-- conversation goes on here -->
+          {% for msg in msgs %}
+            {% if msg.RepToID == 0 %}
+              {% if msg.SenderID == usr.ID %}
+                <div class="msg-cont">
+                  <div class="msg out" ondblclick='Replier({{ msg.ID }},"{{ msg.Text }}","{{ msg.Sender.Username }}")'>
+                    <p class="actmsg">{{ msg.Text }}</p>
+                  </div>
+                </div>
+              {% else %}
+                <div class="msg-cont">
+                  <div class="msg in" ondblclick='Replier({{ msg.ID }},"{{ msg.Text }}","{{ msg.Sender.Username }}")'>
+                    <p class="actmsg">{{ msg.Text }}</p>
+                  </div>
+                </div>
+              {% endif %}
+            {% else %}
+              {% if msg.SenderID == usr.ID %}
+                <div class="msg-cont">
+                  <div class="msg out" ondblclick='Replier({{ msg.ID }},"{{ msg.Text }}","{{ msg.Sender.Username }}")'>
+                    <div class="rep">
+                      <p>{{ msg.ReplyTo.Sender.Username }} : {{ msg.ReplyTo.Text }}</p>
+                    </div>
+                    <p class="actmsg">{{ msg.Text }}</p>
+                  </div>
+                </div>
+              {% else %}
+                <div class="msg-cont">
+                  <div class="msg in" ondblclick='Replier({{ msg.ID }},"{{ msg.Text }}","{{ msg.Sender.Username }}")'>
+                    <div class="rep">
+                      <p>{{ msg.ReplyTo.Sender.Username }} : {{ msg.ReplyTo.Text }}</p>
+                    </div>
+                    <p class="actmsg">{{ msg.Text }}</p>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        
+        <div id="typing-status" class="msg-cont">
+          <div class="msg in">
+            <i class="bx bxs-circle bx-flashing"></i>
+            <i class="bx bxs-circle bx-flashing"></i>
+            <i class="bx bxs-circle bx-flashing"></i>
+          </div>
+        </div>
+      
+      </div>
+      
+      
+      
+      <div id="entryBowl">
+        
+        <div id="replyBox">
+          <p><span id="replyTo"></span> : <span id="replyMsg"></span><span id="replyID">0</span></p>
+          <i class="bx bx-x" onclick="closeReply()"></i>
+        </div>
+        
+        <form onsubmit="SendMsg(); return false" id="entry">
+          <input type="text" id="msg-input" value="" placeholder="Message ..." autocomplete="off"/>
+          <button type="submit" ><i class="bx bxs-send"></i></button>
+        </form>
+        
+      </div>
+      
+    </div>
+  </div>
+  
+  {% include "room/index_js.html" %}
+  {% include "room/index_js2.html" %}
+  
+{% endblock %}
